@@ -81,6 +81,43 @@ function renderBackgrounds(){let b=backgrounds();backgroundsEl=document.getEleme
 async function addProduct(){try{const x=await api('/api/admin/products',{method:'POST',body:JSON.stringify({name:'নতুন গরুর মাংসের বিরিয়ানি',en:'BEEF BIRYANI',price:180,desc:'',image:'',video:'',published:true})});let p=prods();p.push(x);set(P,p);renderProducts()}catch(e){alert(e.message)}}
 async function delProduct(i){let p=prods();if(!p[i])return;if(!confirm('এই menu item delete করবেন?'))return;try{await api('/api/admin/products/'+encodeURIComponent(p[i].id),{method:'DELETE'});p.splice(i,1);set(P,p);renderProducts()}catch(e){alert(e.message)}}
 async function saveProduct(i){let p=prods(),box=document.querySelector(`[data-prod="${i}"]`),q={id:p[i]?.id};box.querySelectorAll('[data-k]').forEach(e=>q[e.dataset.k]=e.type==='checkbox'?e.checked:e.value);q.price=Number(q.price||0);try{const x=await api('/api/admin/products/'+encodeURIComponent(q.id),{method:'PUT',body:JSON.stringify(q)});p[i]=x;set(P,p);renderProducts();alert('Menu item saved')}catch(e){alert(e.message)}}
+  function renderProducts() {
+  const p = prods();
+  const productsEl = document.getElementById('products');
+  if (!productsEl) return;
+
+  productsEl.innerHTML = p.map((x, i) => `
+    <div class="item" data-prod="${i}">
+      <label>নাম</label>
+      <input data-k="name" value="${esc(x.name)}">
+
+      <label>English</label>
+      <input data-k="en" value="${esc(x.en || '')}">
+
+      <label>দাম</label>
+      <input data-k="price" type="number" value="${x.price || 0}">
+
+      <label>Description</label>
+      <input data-k="desc" value="${esc(x.desc || '')}">
+
+      <label>Image URL</label>
+      <input data-k="image" value="${esc(x.image || '')}">
+
+      <label>Video URL</label>
+      <input data-k="video" value="${esc(x.video || '')}">
+
+      <label class="switch">
+        <input data-k="published" type="checkbox" ${x.published ? 'checked' : ''}>
+        Publish
+      </label>
+
+      <div class="row">
+        <button class="btn" onclick="saveProduct(${i})">Save</button>
+        <button class="btn red" onclick="delProduct(${i})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+  }
 function orders(){return get(O,[])}
 function dateKey(d){let x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
 function fmt(d){return new Date(d).toLocaleDateString('bn-BD',{year:'numeric',month:'long',day:'numeric'})}
