@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fffaf0">
+<title>সরকার রেস্টুরেন্ট & বিরিয়ানি</title>
+<style>
+:root{--bg:#fffdf8;--cream:#fff5df;--card:#fff;--ink:#24170b;--muted:#796d5d;--gold:#b98117;--gold2:#e5c66c;--green:#087b4d;--red:#a53127;--line:#eadfc8;--shadow:0 12px 30px rgba(76,48,10,.11)}
+*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(145deg,#fff,#fffaf0 60%,#f8eedb);color:var(--ink);font-family:Arial,"Noto Sans Bengali",sans-serif}.app{width:min(560px,100%);margin:auto;min-height:100vh;padding-bottom:82px}.page{display:none}.page.active{display:block}
+.home-header{background:linear-gradient(135deg,#fffdf8 0%,#fff5dc 48%,#fffdf8 100%);border-bottom:1px solid #e6d39e;padding:6px 9px 6px;box-shadow:0 5px 18px rgba(74,46,8,.08)}
+.header-top{display:flex;align-items:center;gap:7px;position:relative;min-height:43px;padding:0 43px 0 0}.brand-wrap{min-width:0;flex:1}.brand-bn{font-size:16.5px;line-height:1.05;font-weight:1000;white-space:nowrap;color:#4d2b06;letter-spacing:-.35px;text-shadow:0 1px 0 #fff}.brand-en{font-size:7px;letter-spacing:1.05px;font-weight:1000;color:#9b7a42;margin-top:3px;white-space:nowrap}.logo{width:43px;height:43px;object-fit:cover;border-radius:13px;border:2px solid var(--gold2);background:#fff;box-shadow:0 5px 14px rgba(87,55,10,.14);flex:none}.logo-fallback{display:grid;place-items:center;font-size:20px}.open-mini{position:absolute;right:0;top:1px;transform-style:preserve-3d;animation:openSignal3D 2.8s ease-in-out infinite;background:linear-gradient(135deg,#edfff6,#d8f5e8);border:1px solid #b6dfcd;color:var(--green);border-radius:9px;padding:4px 7px;font-size:7px;font-weight:1000;letter-spacing:.45px;box-shadow:0 3px 8px rgba(8,123,77,.10)}.open-mini.closed{animation:openSignal3D 2.8s ease-in-out infinite;background:linear-gradient(135deg,#fff5f3,#ffe6e2);border-color:#edc1bb;color:var(--red)}@keyframes openSignal3D{0%,100%{transform:perspective(160px) rotateY(-8deg) rotateX(0deg) translateZ(0);box-shadow:0 3px 8px rgba(8,123,77,.10)}50%{transform:perspective(160px) rotateY(8deg) rotateX(4deg) translateZ(4px);box-shadow:0 7px 14px rgba(8,123,77,.20)}}.header-open-space{display:none}
+.address{font-size:8px;line-height:1.2;font-weight:900;color:#6b3f0b;text-shadow:0 1px 0 #fff;margin:4px 1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.address-en{font-size:6.7px;color:#8b6a35}.ticker{height:23px;margin-top:5px;border-radius:8px;background:linear-gradient(90deg,#76261f,#9b382e,#76261f);display:flex;align-items:center;color:#fff;overflow:hidden;box-shadow:0 4px 12px rgba(118,38,31,.12)}.ticker-icon{font-size:13px;padding:0 7px;display:inline-block;transform-style:preserve-3d;animation:dailyIcon3D 2.4s linear infinite;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28))}@keyframes dailyIcon3D{0%{transform:perspective(120px) rotateY(0deg) translateZ(0)}50%{transform:perspective(120px) rotateY(180deg) translateZ(5px)}100%{transform:perspective(120px) rotateY(360deg) translateZ(0)}}.ticker-window{overflow:hidden;white-space:nowrap;flex:1}.ticker-track{display:inline-block;padding-left:100%;animation:ticker 22s linear infinite;font-size:9px;font-weight:900}@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.hero{margin:8px 12px 9px;height:128px;border-radius:17px;overflow:hidden;position:relative;background:#e9ddc4;box-shadow:0 9px 24px rgba(76,48,10,.13);border:1px solid #dfcfa9}.hero img,.hero video,.hero iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.66))}.hero-copy{position:absolute;z-index:2;left:13px;bottom:9px;color:#fff}.hero-copy h1{font-size:16px;margin:0 0 3px;font-weight:1000;text-shadow:0 2px 7px #000}.hero-copy p{font-size:7.5px;margin:0 0 5px;font-weight:800}.hero-copy button,.order{border:0;border-radius:11px;background:linear-gradient(145deg,#fff,#f5ead3);color:#684207;font-weight:1000;padding:7px 11px;font-size:9px;box-shadow:0 4px 0 #c9a45b,0 7px 13px rgba(70,42,5,.22);transform:translateY(-1px)}.hero-copy button:active,.order:active{transform:translateY(2px);box-shadow:0 2px 0 #c9a45b,0 4px 8px rgba(70,42,5,.18)}.section{padding:6px 13px 6px}.section h2{margin:0;font-size:18px;font-weight:1000}.section small{display:block;font-size:7px;color:#a0875d;font-weight:900;margin-top:3px;letter-spacing:.6px}
+.cards{padding:0 12px 17px}.food{background:linear-gradient(145deg,#fff,#fffaf0);border:1px solid #eadfc8;border-radius:18px;overflow:hidden;box-shadow:0 10px 25px rgba(76,48,10,.10),0 2px 0 #ead7aa;margin-bottom:13px}.media{height:245px;position:relative;background:linear-gradient(135deg,#f3ead8,#dfcca0);overflow:hidden}.media img,.media video{width:100%;height:100%;object-fit:cover;display:block}.media iframe{width:100%;height:100%;border:0}.fallback{height:100%;display:grid;place-items:center;font-size:58px}.tag{position:absolute;top:10px;left:10px;background:linear-gradient(145deg,#d5a33b,#ae7612);color:#fff;border-radius:999px;padding:5px 8px;font-size:7.5px;font-weight:1000;box-shadow:0 3px 7px #6c450533}.autoplay{position:absolute;top:10px;right:10px;background:#0008;color:#fff;border-radius:999px;padding:5px 7px;font-size:7px;font-weight:900}.food-body{padding:10px 12px 12px}.food-name{font-size:16px;line-height:1.12;font-weight:1000}.food-en{font-size:7px;color:#a1885d;font-weight:900;margin-top:3px;letter-spacing:.7px}.food-desc{font-size:9px;color:var(--muted);line-height:1.4;margin-top:5px}.food-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:8px}.price{font-size:17px;color:#9c6a10;font-weight:1000}.order{padding:7px 12px;font-size:9px;background:linear-gradient(145deg,#fffdf7,#f0dfbb);box-shadow:0 4px 0 #b9892c,0 7px 12px rgba(70,42,5,.18)}
+.simple{padding:18px 14px 9px}.simple h2{margin:0;font-size:22px;font-weight:1000}.simple small{font-size:8px;color:#9c845e;font-weight:900}.menu-card{margin:0 12px 14px}.menu-card .media{height:230px}
+.box{margin:0 12px 12px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}.row{display:flex;gap:9px;align-items:center}.grow{flex:1}.qty{display:flex;align-items:center;gap:7px}.qty button{width:30px;height:30px;border:0;border-radius:8px;background:#f0e2c5;font-size:17px}.summary{margin:0 12px 12px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow)}.line{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}.total{border-top:1px solid var(--line);margin-top:7px;padding-top:10px;font-size:17px}.cta{width:calc(100% - 24px);margin:0 12px;border:0;border-radius:12px;padding:14px;background:linear-gradient(135deg,#d09d2e,#a96f10);color:#fff;font-size:14px;font-weight:1000}.empty{text-align:center;padding:48px 18px;color:#8b806f}.status-pill{display:inline-block;padding:6px 9px;border-radius:999px;background:#e9f8f0;color:#087b4d;font-size:9px;font-weight:1000}.track{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:10px;color:#6d6254}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,100%);height:77px;background:rgba(255,253,248,.98);backdrop-filter:blur(12px);border-top:1px solid #e5dac4;display:flex;justify-content:space-around;z-index:50}.nav{border:0;background:none;color:#958b7d;font-size:10px;font-weight:900}.nav span{display:block;font-size:24px;margin:6px 0 2px}.nav.active{color:#a87515}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:flex-end}.modal.show{display:flex}.sheet{width:min(560px,100%);margin:auto;background:#fffdf8;border-radius:22px 22px 0 0;padding:18px;position:relative;box-shadow:0 -10px 35px rgba(48,29,5,.18)}.sheet-close{position:absolute;right:13px;top:11px;width:31px;height:31px;border:0;border-radius:50%;background:linear-gradient(145deg,#fff,#eadfc8);color:#6e4709;font-size:16px;font-weight:1000;box-shadow:0 4px 0 #c9a45b,0 6px 12px rgba(70,42,5,.16);cursor:pointer}.sheet-close:active{transform:translateY(2px);box-shadow:0 2px 0 #c9a45b}.sheet-back{border:0;background:transparent;color:#8d651e;font-size:9px;font-weight:1000;padding:0;margin:0 0 8px;cursor:pointer}.sheet input,.sheet textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;margin:5px 0 11px}.sheet label{font-size:10px;font-weight:900}
+</style>
+</head>
+<body>
+<div class="app">
+<section id="home" class="page active">
+<header class="home-header">
+  <div class="header-top">
+    <div id="openMini" class="open-mini"><span>●</span> OPEN</div>
+    <div class="header-open-space"></div>
+    <div id="logoSlot" class="logo logo-fallback">🍛</div>
+    <div class="brand-wrap"><div id="brandBn" class="brand-bn"></div><div id="brandEn" class="brand-en"></div></div>
+  </div>
+  <div id="address" class="address"></div>
+  <div class="ticker"><div class="ticker-icon">🔔</div><div class="ticker-window"><div id="ticker" class="ticker-track"></div></div></div>
+</header>
+<div id="hero" class="hero"></div>
+<div class="section"><h2 id="popularTitle"></h2><small id="popularSub"></small></div>
+<div id="popularCards" class="cards"></div>
+</section>
+<section id="menu" class="page"><div class="simple"><h2 id="menuTitle"></h2><small id="menuSub"></small></div><div id="menuCards"></div></section>
+<section id="cart" class="page"><div class="simple"><h2 id="cartTitle"></h2><small id="cartSub"></small></div><div id="cartList"></div><div id="cartSummary"></div></section>
+<section id="orders" class="page"><div class="simple"><h2 id="ordersTitle"></h2><small id="ordersSub"></small></div><div id="orderList"></div></section>
+<section id="profile" class="page"><div class="simple"><h2 id="profileTitle"></h2><small id="profileSub"></small></div><div id="profileContent"></div></section>
+</div>
+<nav class="bottom">
+<button class="nav active" data-page="home" onclick="go('home',this)"><span>⌂</span>Home</button>
+<button class="nav" data-page="menu" onclick="go('menu',this)"><span>☰</span>Menu</button>
+<button class="nav" data-page="cart" onclick="go('cart',this)"><span>🛍</span>Cart</button>
+<button class="nav" data-page="orders" onclick="go('orders',this)"><span>▤</span>Orders</button>
+<button class="nav" data-page="profile" onclick="go('profile',this)"><span>♙</span>Profile</button>
+</nav>
+<div id="checkout" class="modal" onclick="if(event.target===this) closeCheckout()"><div class="sheet"><button class="sheet-close" type="button" aria-label="বন্ধ করুন" onclick="closeCheckout()">✕</button><button class="sheet-back" type="button" onclick="closeCheckout()">‹ ফিরে যান</button><h2>অর্ডার নিশ্চিত করুন</h2><label>নাম</label><input id="cn"><label>মোবাইল</label><input id="cp"><label>ডেলিভারি ঠিকানা</label><textarea id="ca" rows="3"></textarea><label>পেমেন্ট</label><select id="pm"><option value="COD">Cash on Delivery</option><option value="ONLINE">Online Payment</option></select><div id="otpBox"><label>ফোন ভেরিফিকেশন OTP</label><div class="row"><input id="otp" inputmode="numeric" maxlength="6" placeholder="6 digit OTP"><button type="button" class="sheet-back" style="border:0" onclick="requestOtp()">OTP পাঠান</button></div><button type="button" class="sheet-back" style="margin-top:6px" onclick="verifyOtp()">OTP Verify</button><small id="otpMsg"></small></div><button class="cta" onclick="placeOrder()">অর্ডার নিশ্চিত করুন</button></div></div>
+<script>
+const S='sarkarSiteSettingsV8',P='sarkarProductsV8',C='sarkarCartV8',O='sarkarOrdersV8',SIG='sarkarNewOrderSignalV8';
+const DEF={brandBn:'সরকার রেস্টুরেন্ট & বিরিয়ানি',brandEn:'SARKAR RESTAURANT & BIRYANI',address:'গোসাইপুর, হরিরামপুর রোড, মুর্শিদাবাদ, ওয়েস্ট বেঙ্গল, 742302',addressEn:'RESTAURANT ADDRESS',logo:'',open:true,ticker:['আজকের বিশেষ: গরুর মাংসের বিরিয়ানি তাজা রান্না হচ্ছে।'],heroTitle:'গরুর মাংসের বিরিয়ানি',heroSub:'প্রিমিয়াম স্বাদ · আজই অর্ডার করুন',heroButton:'আজই অর্ডার করুন',heroImage:'',heroVideo:'',popularTitle:'গরুর মাংসের বিরিয়ানি',popularSub:'',menuTitle:'মেনু',menuSub:'MENU',cartTitle:'কার্ট',cartSub:'CART',ordersTitle:'অর্ডার',ordersSub:'ORDERS',profileTitle:'প্রোফাইল',profileSub:'PROFILE',profileContent:'আপনার প্রোফাইলের তথ্য এখানে থাকবে।',deliveryFee:40};
+const DEFP=[{id:'p1',name:'প্রিমিয়াম গরুর মাংসের বিরিয়ানি',en:'PREMIUM BEEF BIRYANI',price:180,desc:'নরম গরুর মাংস, সুগন্ধি চাল ও বিশেষ মসলা।',image:'',video:'',published:true}];
+function get(k,d){try{let x=JSON.parse(localStorage.getItem(k));return x==null?d:x}catch(e){return d}}function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function settings(){return {...DEF,...get(S,{})}}function products(){let p=get(P,DEFP);return Array.isArray(p)?p.filter(x=>x.published!==false):DEFP}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function yt(u){let m=String(u||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&/]+)/i);return m?m[1]:''}
+function direct(u){return /\.(mp4|webm|ogg)(\?.*)?$/i.test(u||'')}
+function media(x){if(direct(x.video))return `<video src="${esc(x.video)}" muted autoplay loop playsinline preload="auto" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'></video><div class="fallback" style="display:none">🍛</div><span class="autoplay">▶ AUTO PLAY</span>`;let y=yt(x.video);if(y)return `<iframe src="https://www.youtube.com/embed/${y}?autoplay=1&mute=1&loop=1&playlist=${y}&controls=0&playsinline=1&rel=0" allow="autoplay;encrypted-media"></iframe><span class="autoplay">▶ AUTO PLAY</span>`;if(x.image)return `<img src="${esc(x.image)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="fallback" style="display:none">🍛</div>`;return `<div class="fallback">🍛</div>`}
+function card(x,i){return `<article class="food"><div class="media">${media(x)}<span class="tag">★ POPULAR</span></div><div class="food-body"><div class="food-name">${esc(x.name)}</div><div class="food-en">${esc(x.en)}</div><div class="food-desc">${esc(x.desc)}</div><div class="food-bottom"><div class="price">₹${Number(x.price||0).toLocaleString('en-IN')}</div><button class="order" onclick="add(${i})">অর্ডার করুন</button></div></div></article>`}
+function render(){let s=settings(),p=products();brandBn.textContent=s.brandBn;brandEn.textContent=s.brandEn;address.innerHTML=esc(s.address)+' <span class="address-en">· '+esc(s.addressEn)+'</span>';let ol=document.getElementById('openMini');ol.className='open-mini '+(s.open?'':'closed');ol.innerHTML='<span>●</span> '+(s.open?'OPEN':'CLOSED');if(s.logo){logoSlot.outerHTML=`<img id="logoSlot" class="logo" src="${esc(s.logo)}" onerror="this.outerHTML='<div id=&quot;logoSlot&quot; class=&quot;logo logo-fallback&quot;>🍛</div>'">`};ticker.innerHTML=(s.ticker||[]).filter(Boolean).map(t=>`<span>◆ ${esc(t)}</span>`).join('')||'<span>◆ স্বাগতম</span>';popularTitle.textContent=s.popularTitle;popularSub.textContent=s.popularSub;menuTitle.textContent=s.menuTitle;menuSub.textContent=s.menuSub;cartTitle.textContent=s.cartTitle;cartSub.textContent=s.cartSub;ordersTitle.textContent=s.ordersTitle;ordersSub.textContent=s.ordersSub;profileTitle.textContent=s.profileTitle;profileSub.textContent=s.profileSub;profileContent.innerHTML=`<div class="box">${esc(s.profileContent)}</div>`;hero.innerHTML=heroMedia(s)+`<div class="hero-copy"><h1>${esc(s.heroTitle)}</h1><p>${esc(s.heroSub)}</p><button onclick="go('menu')">${esc(s.heroButton)}</button></div>`;popularCards.innerHTML=p.map(card).join('')||'<div class="empty">কোনো প্রকাশিত খাবার নেই।</div>';menuCards.innerHTML=p.map((x,i)=>`<div class="menu-card">${card(x,i)}</div>`).join('')||'<div class="empty">কোনো প্রকাশিত খাবার নেই।</div>';renderCart();renderOrders()}
+function heroMedia(s){if(direct(s.heroVideo))return `<video src="${esc(s.heroVideo)}" muted autoplay loop playsinline preload="auto"></video>`;let y=yt(s.heroVideo);if(y)return `<iframe src="https://www.youtube.com/embed/${y}?autoplay=1&mute=1&loop=1&playlist=${y}&controls=0&playsinline=1&rel=0" allow="autoplay;encrypted-media"></iframe>`;if(s.heroImage)return `<img src="${esc(s.heroImage)}">`;return '<div class="fallback">🍛</div>'}
+let cart=get(C,[]),orders=get(O,[]);
+function add(i){let x=cart.find(x=>x.i===i);x?x.q++:cart.push({i,q:1});set(C,cart);renderCart();go('cart')}
+function change(i,d){let x=cart.find(x=>x.i===i);if(!x)return;x.q+=d;if(x.q<1)cart=cart.filter(y=>y!==x);set(C,cart);renderCart()}
+function renderCart(){let p=products();if(!cart.length){cartList.innerHTML='<div class="empty">🛍<br><br>কার্ট খালি</div>';cartSummary.innerHTML='';return}let sub=cart.reduce((a,x)=>a+(p[x.i]?.price||0)*x.q,0),fee=settings().deliveryFee||0;cartList.innerHTML=cart.map(x=>{let a=p[x.i];return a?`<div class="box row"><div class="grow"><b>${esc(a.name)}</b><div class="price" style="font-size:16px">₹${a.price*x.q}</div></div><div class="qty"><button onclick="change(${x.i},-1)">−</button>${x.q}<button onclick="change(${x.i},1)">+</button></div></div>`:''}).join('');cartSummary.innerHTML=`<div class="summary"><div class="line"><span>Subtotal</span><b>₹${sub}</b></div><div class="line"><span>Delivery</span><b>₹${fee}</b></div><div class="line total"><b>Total</b><b class="price">₹${sub+fee}</b></div></div><button class="cta" onclick="openCheckout()">অর্ডার নিশ্চিত করুন</button>`}
+function openCheckout(){checkout.classList.add('show');setTimeout(()=>cn.focus(),80)}
+function closeCheckout(){checkout.classList.remove('show')}
+async function productionLoad(){
+  if(!location.protocol.startsWith('http')) return;
+  try{
+    const phone=localStorage.getItem('sarkarCustomerPhoneV1')||'';
+    const reqs=[fetch('/api/settings'),fetch('/api/products')];
+    if(phone) reqs.push(fetch('/api/orders?phone='+encodeURIComponent(phone)));
+    const rs=await Promise.all(reqs);
+    if(rs[0].ok){const x=await rs[0].json();localStorage.setItem(S,JSON.stringify({...DEF,...x}));}
+    if(rs[1].ok){const x=await rs[1].json();localStorage.setItem(P,JSON.stringify(x));}
+    if(phone && rs[2]?.ok){const x=await rs[2].json();orders=x;set(O,orders);}
+    render();
+  }catch(e){console.warn('Production API unavailable; local preview retained.',e)}
+}
+async function productionRefreshOrders(){
+  const phone=localStorage.getItem('sarkarCustomerPhoneV1')||'';
+  if(!phone || !location.protocol.startsWith('http')) return;
+  try{const r=await fetch('/api/orders?phone='+encodeURIComponent(phone));if(r.ok){orders=await r.json();set(O,orders);renderOrders();}}catch(e){}
+}
+async function requestOtp(){const ph=cp.value.trim();if(!ph)return alert('আগে মোবাইল নম্বর দিন');try{const r=await fetch('/api/otp/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:ph})});const d=await r.json();if(!r.ok)throw Error(d.error||'OTP failed');document.getElementById('otpMsg').textContent=' OTP পাঠানো হয়েছে।';}catch(e){document.getElementById('otpMsg').textContent=' '+e.message;}}
+async function verifyOtp(){const ph=cp.value.trim(),code=document.getElementById('otp').value.trim();try{const r=await fetch('/api/otp/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:ph,code})});const d=await r.json();if(!r.ok)throw Error(d.error||'OTP failed');localStorage.setItem('sarkarPhoneVerificationToken_'+ph,d.verificationToken);document.getElementById('otpMsg').textContent=' ✓ ফোন ভেরিফাই হয়েছে';}catch(e){document.getElementById('otpMsg').textContent=' '+e.message;}}
+async function startRazorpay(data,n,ph){if(!window.Razorpay){await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://checkout.razorpay.com/v1/checkout.js';sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc);});}return new Promise((resolve,reject)=>{const rz=new Razorpay({key:data.keyId,amount:data.amount,currency:data.currency,order_id:data.razorpayOrderId,name:siteNameForPay(),description:'SARKAR Restaurant Order '+data.orderId,prefill:{name:n,contact:ph},handler:async response=>{try{const r=await fetch('/api/payments/razorpay/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,accessToken:localStorage.getItem('sarkarOrderToken_'+data.orderId),...response})});const d=await r.json();if(!r.ok)throw Error(d.error||'Payment verification failed');resolve(d);}catch(e){reject(e)}},modal:{ondismiss:()=>reject(new Error('Payment window closed'))}});rz.open();});}
+function siteNameForPay(){return (settings().brandEn||settings().brandBn||'SARKAR RESTAURANT & BIRYANI').slice(0,80)}
+async function productionPlaceOrder(){
+  const n=cn.value.trim(),ph=cp.value.trim(),ad=ca.value.trim(),paymentMethod=(document.getElementById('pm')?.value||'COD');
+  if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');
+  const p=products(),items=cart.map(x=>({productId:p[x.i]?.id,qty:x.q})).filter(x=>x.productId); if(!items.length)return alert('কার্টের খাবারগুলো আর পাওয়া যাচ্ছে না। Menu আবার খুলুন।');
+  const verificationToken=localStorage.getItem('sarkarPhoneVerificationToken_'+ph)||'';
+  try{const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:ph,address:ad,items,paymentMethod,verificationToken})});const data=await r.json();if(!r.ok)throw Error(data.error||'Order failed');
+    localStorage.setItem('sarkarCustomerPhoneV1',ph);orders.unshift(data);set(O,orders);if(data.accessToken)localStorage.setItem('sarkarOrderToken_'+data.id,data.accessToken);
+    if(paymentMethod==='ONLINE'){const pr=await fetch('/api/payments/razorpay/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.id,accessToken:data.accessToken})});const pd=await pr.json();if(!pr.ok)throw Error(pd.error||'Online payment unavailable');await startRazorpay(pd,n,ph);data.paymentStatus='PAID';}
+    cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert(paymentMethod==='ONLINE'?'অর্ডার ও payment সফল হয়েছে।':'অর্ডার গ্রহণ হয়েছে। Order ID: '+data.id);
+  }catch(e){alert(e.message)}
+}
+
+function placeOrder(){if(location.protocol.startsWith('http')) return productionPlaceOrder(); let n=cn.value.trim(),ph=cp.value.trim(),ad=ca.value.trim();if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');let p=products(),sub=cart.reduce((a,x)=>a+(p[x.i]?.price||0)*x.q,0),fee=settings().deliveryFee||0,o={id:'SK'+Date.now().toString().slice(-8),name:n,phone:ph,address:ad,total:sub+fee,items:cart.map(x=>({name:p[x.i]?.name,qty:x.q,price:p[x.i]?.price})),status:'Placed',createdAt:new Date().toISOString(),completedAt:null};orders.unshift(o);set(O,orders);set(SIG,{id:o.id,time:Date.now()});cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert('অর্ডার গ্রহণ হয়েছে।')}
+async function refreshTracking(id,token,el){try{const r=await fetch('/api/orders/'+encodeURIComponent(id)+'/tracking?accessToken='+encodeURIComponent(token));const d=await r.json();if(!r.ok)throw Error(d.error||'Tracking unavailable');const l=d.location;el.innerHTML=l?'📍 Delivery location updated<br><a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(l.latitude+','+l.longitude)+'" target="_blank" rel="noopener">Map খুলুন</a>':'📍 Delivery agent এখনো location পাঠায়নি।';}catch(e){el.innerHTML='📍 Tracking unavailable';}}
+function renderOrders(){let status={NEW:'অর্ডার এসেছে',ACCEPTED:'অর্ডার গ্রহণ করা হয়েছে',PREPARING:'রান্না হচ্ছে',READY:'প্রস্তুত',OUT_FOR_DELIVERY:'ডেলিভারির পথে',CANCELLED:'অর্ডার বাতিল',DELIVERED:'Delivered · Completed',Placed:'অর্ডার এসেছে',Accepted:'অর্ডার গ্রহণ করা হয়েছে',Cancelled:'অর্ডার বাতিল',Delivered:'Delivered · Completed'};orderList.innerHTML=orders.length?orders.map(o=>`<div class="box"><div class="row"><b>অর্ডার #${esc(o.id)}</b><span class="status-pill">${esc(status[o.status]||o.status)}</span></div><div style="font-size:11px;color:#776d61;margin-top:7px">₹${o.total} · ${esc(o.name)}</div><div class="track" id="customer-track-${esc(o.id)}">📍 ${o.status==='DELIVERED'||o.status==='Delivered'?'ডেলিভারি সম্পন্ন':'স্ট্যাটাস/ডেলিভারি লোকেশন লোড হচ্ছে…'}</div>${localStorage.getItem('sarkarOrderToken_'+o.id)?'<script>refreshTracking('+JSON.stringify(o.id)+','+JSON.stringify(localStorage.getItem('sarkarOrderToken_'+o.id))+',document.getElementById(\'customer-track-'+esc(o.id)+'\'))<\/script>':''}</div>`).join(''):'<div class="empty">এখনও কোনো অর্ডার নেই।</div>'}
+function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));let b=btn||document.querySelector(`.nav[data-page="${id}"]`);if(b)b.classList.add('active');scrollTo(0,0)}
+window.addEventListener('storage',e=>{if([S,P,O,SIG].includes(e.key)){orders=get(O,[]);render()}});render(); productionLoad(); setInterval(productionRefreshOrders,10000);
+</script>
+
+<script>
+/* SARKAR v11 — order/data management foundation */
+(function(){
+  const ORDERS_KEY = 'sarkarOrdersV8';
+  const SIGNAL_KEY = 'sarkarNewOrderSignalV8';
+
+  function readOrders(){
+    try { return JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function writeOrders(orders){
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    return orders;
+  }
+
+  window.SarkarOrderData = {
+    list: readOrders,
+    save: writeOrders,
+
+    create: function(order){
+      const orders = readOrders();
+      const now = new Date();
+      const item = Object.assign({
+        id: 'SRK-' + now.getTime().toString().slice(-8),
+        status: 'NEW',
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString()
+      }, order || {});
+      orders.unshift(item);
+      writeOrders(orders);
+
+      localStorage.setItem(SIGNAL_KEY, JSON.stringify({
+        type: 'NEW_ORDER',
+        orderId: item.id,
+        createdAt: item.createdAt,
+        signalAt: Date.now()
+      }));
+      return item;
+    },
+
+    updateStatus: function(id, status){
+      const orders = readOrders();
+      const index = orders.findIndex(o => String(o.id) === String(id));
+      if(index < 0) return null;
+      orders[index].status = status;
+      orders[index].updatedAt = new Date().toISOString();
+      writeOrders(orders);
+      return orders[index];
+    },
+
+    remove: function(id){
+      const orders = readOrders().filter(o => String(o.id) !== String(id));
+      writeOrders(orders);
+      return orders;
+    }
+  };
+})();
+</script>
+
+<script>productionLoad();</script></body>
+</html>
