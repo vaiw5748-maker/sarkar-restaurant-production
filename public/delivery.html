@@ -41,20 +41,6 @@ async function verifyToken(){
   return true;
 }
 
-  try{
-    const res=await fetch(`/api/delivery/verify?token=${encodeURIComponent(token)}`);
-    const data=await res.json();
-
-    if(!res.ok) throw new Error(data.error||"Invalid token");
-
-    say(`🟢 Order #${data.orderId}<br><span class="muted">Tracking প্রস্তুত</span>`);
-    return true;
-  }catch(e){
-    say("❌ "+e.message);
-    return false;
-  }
-}
-
 async function send(pos){
   try{
     const r=await fetch("/api/delivery/location",{
