@@ -84,29 +84,23 @@ app.post('/api/delivery/location',async(req,res)=>{const token=bearer(req);if(!t
 app.get('/api/orders/:id/tracking', async (req, res) => {
   try {
     const token = String(req.query.accessToken || '');
-    if (!token) {
-      return res.status(401).json({ error: 'Access token required' });
-    }
+    if (!token) return res.status(401).json({ error: 'Access token required' });
 
     const o = await q(
       `SELECT id,status,address,
               delivery_latitude,
-              delivery_longitude,
-              updated_at AS "updatedAt"
+              delivery_longitude
        FROM orders
        WHERE id=$1 AND access_token_hash=$2`,
       [req.params.id, tokenHash(token)]
     );
 
-    if (!o.rowCount) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
+    if (!o.rowCount) return res.status(404).json({ error: 'Order not found' });
 
     const order = o.rows[0];
 
     if (order.status === 'DELIVERED') {
       return res.json({
-        order,
         delivered: true,
         location: null,
         distanceKm: 0,
@@ -115,8 +109,7 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
     }
 
     const t = await q(
-      `SELECT latitude,longitude,accuracy,
-              recorded_at AS "recordedAt"
+      `SELECT latitude,longitude,accuracy
        FROM tracking_points
        WHERE order_id=$1
        ORDER BY recorded_at DESC
@@ -129,11 +122,7 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
     let distanceKm = null;
     let etaMin = null;
 
-    if (
-      location &&
-      order.delivery_latitude &&
-      order.delivery_longitude
-    ) {
+    if (location && order.delivery_latitude && order.delivery_longitude) {
       try {
         const rr = await fetch(
           `https://router.project-osrm.org/route/v1/driving/${location.longitude},${location.latitude};${order.delivery_longitude},${order.delivery_latitude}?overview=false`
@@ -149,7 +138,6 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
     }
 
     res.json({
-      order,
       delivered: false,
       location,
       distanceKm,
