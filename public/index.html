@@ -145,9 +145,8 @@ async function refreshTracking(id,token,el){
       el.innerHTML='📍 ডেলিভারি বয় এখনো লোকেশন পাঠায়নি।';
     }
   }catch(e){
-    el.innerHTML='📍 Tracking unavailable';
+  el.innerHTML='📍 '+(e.message||'Tracking unavailable');
   }
-}
 function renderOrders(){
   const status={
     NEW:'অর্ডার এসেছে',
