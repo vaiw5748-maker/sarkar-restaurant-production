@@ -59,7 +59,7 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function yt(u){let m=String(u||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&/]+)/i);return m?m[1]:''}
 function direct(u){return /\.(mp4|webm|ogg)(\?.*)?$/i.test(u||'')}
 function media(x){if(direct(x.video))return `<video src="${esc(x.video)}" muted autoplay loop playsinline preload="auto" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'></video><div class="fallback" style="display:none">🍛</div><span class="autoplay">▶ AUTO PLAY</span>`;let y=yt(x.video);if(y)return `<iframe src="https://www.youtube.com/embed/${y}?autoplay=1&mute=1&loop=1&playlist=${y}&controls=0&playsinline=1&rel=0" allow="autoplay;encrypted-media"></iframe><span class="autoplay">▶ AUTO PLAY</span>`;if(x.image)return `<img src="${esc(x.image)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="fallback" style="display:none">🍛</div>`;return `<div class="fallback">🍛</div>`}
-function card(x){
+function card(x,i){
   return `<article class="food">
     <div class="media">
       ${media(x)}
@@ -69,11 +69,11 @@ function card(x){
       <h3>${esc(x.name)}</h3>
       <small>${esc(x.en)}</small>
       <div class="price">₹${x.price}</div>
-      <p>${esc(x.desc || '')}</p>
-      <button onclick="add(${JSON.stringify(x.id)})">অর্ডার করুন</button>
+      <p>${esc(x.desc||'')}</p>
+      <button onclick="add(${i})">অর্ডার করুন</button>
     </div>
   </article>`;
-                                                                                                                                                                                                                                                                                                                                   }
+}                                                                                                                                                                                                                                                                                              }
 function add(i){let x=cart.find(x=>x.i===i);x?x.q++:cart.push({i,q:1});set(C,cart);renderCart();go('cart')}
 function change(i,d){let x=cart.find(x=>x.i===i);if(!x)return;x.q+=d;if(x.q<1)cart=cart.filter(y=>y!==x);set(C,cart);renderCart()}
 function renderCart(){let p=products();if(!cart.length){cartList.innerHTML='<div class="empty">🛍<br><br>কার্ট খালি</div>';cartSummary.innerHTML='';return}let sub=cart.reduce((a,x)=>a+(p[x.i]?.price||0)*x.q,0),fee=settings().deliveryFee||0;cartList.innerHTML=cart.map(x=>{let a=p[x.i];return a?`<div class="box row"><div class="grow"><b>${esc(a.name)}</b><div class="price" style="font-size:16px">₹${a.price*x.q}</div></div><div class="qty"><button onclick="change(${x.i},-1)">−</button>${x.q}<button onclick="change(${x.i},1)">+</button></div></div>`:''}).join('');cartSummary.innerHTML=`<div class="summary"><div class="line"><span>Subtotal</span><b>₹${sub}</b></div><div class="line"><span>Delivery</span><b>₹${fee}</b></div><div class="line total"><b>Total</b><b class="price">₹${sub+fee}</b></div></div><button class="cta" onclick="openCheckout()">অর্ডার নিশ্চিত করুন</button>`}
