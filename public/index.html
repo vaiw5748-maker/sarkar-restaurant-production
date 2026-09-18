@@ -134,43 +134,20 @@ async function refreshTracking(id,token,el){
   try{
     const r=await fetch('/api/orders/'+encodeURIComponent(id)+'/tracking?accessToken='+encodeURIComponent(token));
     const d=await r.json();
-    if(!r.ok) throw Error(d.error||'Tracking unavailable');
+    if(!r.ok)throw Error();
 
-    const l=d.location;
-    const dest=d.destination;
-
-    if(!l){
+    if(d.location){
+      el.innerHTML=
+      `📍 Live Tracking<br>
+       🚚 ${d.distanceKm??'--'} km · ⏱️ ${d.etaMin??'--'} মিনিট<br>
+       <a href="https://www.google.com/maps/search/?api=1&query=${d.location.latitude},${d.location.longitude}" target="_blank">🗺️ Live Map</a>`;
+    }else{
       el.innerHTML='📍 ডেলিভারি বয় এখনো লোকেশন পাঠায়নি।';
-      return;
     }
-
-    let html='📍 Live Tracking<br>';
-
-    if(dest){
-      try{
-        const route=await fetch(
-          `https://router.project-osrm.org/route/v1/driving/${l.longitude},${l.latitude};${dest.longitude},${dest.latitude}?overview=false`
-        );
-        const rt=await route.json();
-
-        if(rt.routes&&rt.routes.length){
-          const km=(rt.routes[0].distance/1000).toFixed(1);
-          const min=Math.round(rt.routes[0].duration/60);
-
-          html+=`🚚 ${km} km বাকি<br>`;
-          html+=`⏱️ ${min} মিনিট লাগবে<br>`;
-        }
-      }catch(e){}
-    }
-
-    html+=`<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.latitude+','+l.longitude)}" target="_blank" rel="noopener">🗺️ Live Map খুলুন</a>`;
-
-    el.innerHTML=html;
-
   }catch(e){
     el.innerHTML='📍 Tracking unavailable';
   }
-  }
+}
 function renderOrders(){let status={NEW:'অর্ডার এসেছে',ACCEPTED:'অর্ডার গ্রহণ করা হয়েছে',PREPARING:'রান্না হচ্ছে',READY:'প্রস্তুত',OUT_FOR_DELIVERY:'ডেলিভারির পথে',CANCELLED:'অর্ডার বাতিল',DELIVERED:'Delivered · Completed',Placed:'অর্ডার এসেছে',Accepted:'অর্ডার গ্রহণ করা হয়েছে',Cancelled:'অর্ডার বাতিল',Delivered:'Delivered · Completed'};orderList.innerHTML=orders.length?orders.map(o=>`<div class="box"><div class="row"><b>অর্ডার #${esc(o.id)}</b><span class="status-pill">${esc(status[o.status]||o.status)}</span></div><div style="font-size:11px;color:#776d61;margin-top:7px">₹${o.total} · ${esc(o.name)}</div><div class="track" id="customer-track-${esc(o.id)}">📍 ${o.status==='DELIVERED'||o.status==='Delivered'?'ডেলিভারি সম্পন্ন':'স্ট্যাটাস/ডেলিভারি লোকেশন লোড হচ্ছে…'}</div>${localStorage.getItem('sarkarOrderToken_'+o.id)?'<script>refreshTracking('+JSON.stringify(o.id)+','+JSON.stringify(localStorage.getItem('sarkarOrderToken_'+o.id))+',document.getElementById(\'customer-track-'+esc(o.id)+'\'))<\/script>':''}</div>`).join(''):'<div class="empty">এখনও কোনো অর্ডার নেই।</div>'}
 function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));let b=btn||document.querySelector(`.nav[data-page="${id}"]`);if(b)b.classList.add('active');scrollTo(0,0)}
 window.addEventListener('storage',e=>{if([S,P,O,SIG].includes(e.key)){orders=get(O,[]);render()}});render(); productionLoad(); setInterval(productionRefreshOrders,10000);
