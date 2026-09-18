@@ -81,7 +81,60 @@ app.get('/api/admin/delivery-sessions/:orderId',auth,async(req,res)=>{
  res.json(r.rows);
 });
 app.post('/api/delivery/location',async(req,res)=>{const token=bearer(req);if(!token)return res.status(401).json({error:'Delivery token required'});const s=await q('SELECT order_id FROM delivery_sessions WHERE token_hash=$1 AND active=true AND expires_at>now()',[tokenHash(token)]);if(!s.rowCount)return res.status(401).json({error:'Invalid or expired delivery token'});const lat=Number(req.body.latitude),lng=Number(req.body.longitude),accuracy=req.body.accuracy==null?null:Number(req.body.accuracy);if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat<-90||lat>90||lng<-180||lng>180)return res.status(400).json({error:'Invalid coordinates'});await q('INSERT INTO tracking_points(order_id,latitude,longitude,accuracy) VALUES($1,$2,$3,$4)',[s.rows[0].order_id,lat,lng,Number.isFinite(accuracy)?accuracy:null]);await q("UPDATE orders SET status=CASE WHEN status IN ('READY','OUT_FOR_DELIVERY') THEN 'OUT_FOR_DELIVERY' ELSE status END,updated_at=now() WHERE id=$1",[s.rows[0].order_id]);res.json({ok:true,orderId:s.rows[0].order_id});});
-app.get('/api/orders/:id/tracking',async(req,res)=>{const token=String(req.query.accessToken||'');if(!token)return res.status(401).json({error:'Access token required'});const o=await q('SELECT id,status,address,updated_at AS "updatedAt" FROM orders WHERE id=$1 AND access_token_hash=$2',[req.params.id,tokenHash(token)]);if(!o.rowCount)return res.status(404).json({error:'Order not found'});const t=await q('SELECT latitude,longitude,accuracy,recorded_at AS "recordedAt" FROM tracking_points WHERE order_id=$1 ORDER BY recorded_at DESC LIMIT 1',[req.params.id]);res.json({order:o.rows[0],location:t.rows[0]||null});});
+app.get('/api/orders/:id/tracking', async (req, res) => {
+  const token = String(req.query.accessToken || '');
+  if (!token) return res.status(401).json({ error: 'Access token required' });
+
+  const o = await q(
+    `SELECT id,status,address,
+            delivery_latitude,
+            delivery_longitude,
+            updated_at AS "updatedAt"
+     FROM orders
+     WHERE id=$1 AND access_token_hash=$2`,
+    [req.params.id, tokenHash(token)]
+  );
+
+  if (!o.rowCount)
+    return res.status(404).json({ error: 'Order not found' });
+
+  const t = await q(
+    `SELECT latitude,longitude,accuracy,
+            recorded_at AS "recordedAt"
+     FROM tracking_points
+     WHERE order_id=$1
+     ORDER BY recorded_at DESC
+     LIMIT 1`,
+    [req.params.id]
+  );
+
+  const order = o.rows[0];
+  const location = t.rows[0] || null;
+
+  let distanceKm = null;
+  let etaMin = null;
+
+  if (location && order.delivery_latitude && order.delivery_longitude) {
+    try {
+      const rr = await fetch(
+        `https://router.project-osrm.org/route/v1/driving/${location.longitude},${location.latitude};${order.delivery_longitude},${order.delivery_latitude}?overview=false`
+      );
+      const route = await rr.json();
+
+      if (route.routes?.length) {
+        distanceKm = +(route.routes[0].distance / 1000).toFixed(1);
+        etaMin = Math.round(route.routes[0].duration / 60);
+      }
+    } catch {}
+  }
+
+  res.json({
+    order,
+    location,
+    distanceKm,
+    etaMin
+  });
+});
 app.post('/api/payments/razorpay/order',async(req,res)=>{
   if(!razorConfigured())return res.status(503).json({error:'Online payment is not configured on this server'});
   const orderId=String(req.body.orderId||''),accessToken=String(req.body.accessToken||'');
