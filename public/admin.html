@@ -80,7 +80,31 @@ function backgrounds(){return get(B,DEFB)}function addBackground(){let b=backgro
 function renderBackgrounds(){let b=backgrounds();backgroundsEl=document.getElementById('backgrounds');backgroundsEl.innerHTML=b.map((x,i)=>`<div class="item"><label>Photo URL</label><input data-bg="${i}" value="${esc(x.url)}"><label class="switch"><input data-bgp="${i}" type="checkbox" ${x.published?'checked':''}> Publish</label><button class="btn red" onclick="delBg(${i})">Delete</button></div>`).join('')||'<div style="font-size:10px;color:#8b7b64">No background photos added.</div>'}
 async function addProduct(){try{const x=await api('/api/admin/products',{method:'POST',body:JSON.stringify({name:'নতুন গরুর মাংসের বিরিয়ানি',en:'BEEF BIRYANI',price:180,desc:'',image:'',video:'',published:true})});let p=prods();p.push(x);set(P,p);renderProducts()}catch(e){alert(e.message)}}
 async function delProduct(i){let p=prods();if(!p[i])return;if(!confirm('এই menu item delete করবেন?'))return;try{await api('/api/admin/products/'+encodeURIComponent(p[i].id),{method:'DELETE'});p.splice(i,1);set(P,p);renderProducts()}catch(e){alert(e.message)}}
-async function saveProduct(i){let p=prods(),box=document.querySelector(`[data-prod="${i}"]`),q={id:p[i]?.id};box.querySelectorAll('[data-k]').forEach(e=>q[e.dataset.k]=e.type==='checkbox'?e.checked:e.value);q.price=Number(q.price||0);try{const x=await api('/api/admin/products/'+encodeURIComponent(q.id),{method:'PUT',body:JSON.stringify(q)});p[i]=x;set(P,p);renderProducts();alert('Menu item saved')}catch(e){alert(e.message)}}
+async function saveProduct(i){
+  let p=prods(),
+      box=document.querySelector(`[data-prod="${i}"]`),
+      q={id:p[i]?.id};
+
+  box.querySelectorAll('[data-k]').forEach(e=>{
+    q[e.dataset.k]=e.type==='checkbox' ? e.checked : e.value.trim();
+  });
+
+  q.price=Number(q.price||0);
+
+  try{
+    const x=await api('/api/admin/products/'+encodeURIComponent(q.id),{
+      method:'PUT',
+      body:JSON.stringify(q)
+    });
+
+    p[i]=x;
+    set(P,p);
+    renderProducts();
+    alert('Menu item saved');
+  }catch(e){
+    alert(e.message);
+  }
+}
   function renderProducts() {
   const p = prods();
   const productsEl = document.getElementById('products');
