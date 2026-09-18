@@ -131,7 +131,7 @@ app.post('/api/payments/razorpay/webhook',async(req,res)=>{
 });
 app.post('/api/notifications/order-status',auth,async(req,res)=>{const id=String(req.body.orderId||''),status=String(req.body.status||'').toUpperCase();if(!id||!allowedStatuses.has(status))return res.status(400).json({error:'orderId and valid status required'});const r=await q('SELECT id,customer_name AS name,phone,total FROM orders WHERE id=$1',[id]);if(!r.rowCount)return res.status(404).json({error:'Order not found'});await notify('order.status',{...r.rows[0],status});res.json({ok:true})});
 app.get('/api/admin/daily',auth,async(_,res)=>{const r=await q(`SELECT DATE(completed_at) AS day,COUNT(*)::int AS orders,COUNT(DISTINCT phone)::int AS customers,COALESCE(SUM(total),0)::numeric AS total FROM orders WHERE status='DELIVERED' AND completed_at IS NOT NULL GROUP BY DATE(completed_at) ORDER BY day DESC LIMIT 366`);res.json(r.rows)});
-app.get('/',(req,res)=>res.sendFile(path.join(publicDir,'sarkar_restaurant_CUSTOMER_v11.html')));
+app.get('/', (req, res) => res.sendFile(path.join(publicDir, 'index.html')));;
 app.use((req,res)=>{if(req.path.startsWith('/api/'))return res.status(404).json({error:'Not found'});res.status(404).send('Not found')});
 const port=Number(process.env.PORT||3000);
 
