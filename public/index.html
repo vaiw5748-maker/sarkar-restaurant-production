@@ -148,7 +148,54 @@ async function refreshTracking(id,token,el){
     el.innerHTML='📍 Tracking unavailable';
   }
 }
-function renderOrders(){let status={NEW:'অর্ডার এসেছে',ACCEPTED:'অর্ডার গ্রহণ করা হয়েছে',PREPARING:'রান্না হচ্ছে',READY:'প্রস্তুত',OUT_FOR_DELIVERY:'ডেলিভারির পথে',CANCELLED:'অর্ডার বাতিল',DELIVERED:'Delivered · Completed',Placed:'অর্ডার এসেছে',Accepted:'অর্ডার গ্রহণ করা হয়েছে',Cancelled:'অর্ডার বাতিল',Delivered:'Delivered · Completed'};orderList.innerHTML=orders.length?orders.map(o=>`<div class="box"><div class="row"><b>অর্ডার #${esc(o.id)}</b><span class="status-pill">${esc(status[o.status]||o.status)}</span></div><div style="font-size:11px;color:#776d61;margin-top:7px">₹${o.total} · ${esc(o.name)}</div><div class="track" id="customer-track-${esc(o.id)}">📍 ${o.status==='DELIVERED'||o.status==='Delivered'?'ডেলিভারি সম্পন্ন':'স্ট্যাটাস/ডেলিভারি লোকেশন লোড হচ্ছে…'}</div>${localStorage.getItem('sarkarOrderToken_'+o.id)?'<script>refreshTracking('+JSON.stringify(o.id)+','+JSON.stringify(localStorage.getItem('sarkarOrderToken_'+o.id))+',document.getElementById(\'customer-track-'+esc(o.id)+'\'))<\/script>':''}</div>`).join(''):'<div class="empty">এখনও কোনো অর্ডার নেই।</div>'}
+function renderOrders(){
+  const status={
+    NEW:'অর্ডার এসেছে',
+    ACCEPTED:'অর্ডার গ্রহণ করা হয়েছে',
+    PREPARING:'রান্না হচ্ছে',
+    READY:'প্রস্তুত',
+    OUT_FOR_DELIVERY:'ডেলিভারির পথে',
+    CANCELLED:'অর্ডার বাতিল',
+    DELIVERED:'Delivered · Completed',
+    Placed:'অর্ডার এসেছে',
+    Accepted:'অর্ডার গ্রহণ করা হয়েছে',
+    Cancelled:'অর্ডার বাতিল',
+    Delivered:'Delivered · Completed'
+  };
+
+  if(!orders.length){
+    orderList.innerHTML='<div class="empty">এখনও কোনো অর্ডার নেই।</div>';
+    return;
+  }
+
+  orderList.innerHTML=orders.map(o=>`
+    <div class="box">
+      <div class="row">
+        <b>অর্ডার #${esc(o.id)}</b>
+        <span class="status-pill">${esc(status[o.status]||o.status)}</span>
+      </div>
+
+      <div style="font-size:11px;color:#776d61;margin-top:7px">
+        ₹${o.total} · ${esc(o.name)}
+      </div>
+
+      <div class="track" id="customer-track-${esc(o.id)}">
+        📍 ${o.status==='DELIVERED'||o.status==='Delivered'
+          ?'ডেলিভারি সম্পন্ন'
+          :'স্ট্যাটাস/ডেলিভারি লোকেশন লোড হচ্ছে…'}
+      </div>
+    </div>
+  `).join('');
+
+  orders.forEach(o=>{
+    const token=localStorage.getItem('sarkarOrderToken_'+o.id);
+    const el=document.getElementById('customer-track-'+o.id);
+    if(token&&el){
+      refreshTracking(o.id,token,el);
+      setInterval(()=>refreshTracking(o.id,token,el),5000);
+    }
+  });
+  }
 function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));let b=btn||document.querySelector(`.nav[data-page="${id}"]`);if(b)b.classList.add('active');scrollTo(0,0)}
 window.addEventListener('storage',e=>{if([S,P,O,SIG].includes(e.key)){orders=get(O,[]);render()}});render(); productionLoad(); setInterval(productionRefreshOrders,10000);
 </script>
