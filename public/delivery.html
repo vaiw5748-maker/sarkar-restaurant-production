@@ -37,6 +37,9 @@ async function verifyToken(){
     say("❌ Delivery token নেই।");
     return false;
   }
+  say("🟢 Tracking প্রস্তুত");
+  return true;
+}
 
   try{
     const res=await fetch(`/api/delivery/verify?token=${encodeURIComponent(token)}`);
