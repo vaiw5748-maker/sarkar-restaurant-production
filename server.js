@@ -21,6 +21,8 @@ async function initDatabase(){
   const schemaPath = path.join(__dirname,'schema.sql');
   const schema = await fs.readFile(schemaPath,'utf8');
   await pool.query(schema);
+  await pool.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_latitude DOUBLE PRECISION`);
+await pool.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_longitude DOUBLE PRECISION`);
   if(process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD){
     const email=String(process.env.ADMIN_EMAIL).trim().toLowerCase();
     const hash=await bcrypt.hash(String(process.env.ADMIN_PASSWORD),12);
