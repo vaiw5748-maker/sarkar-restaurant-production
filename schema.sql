@@ -89,3 +89,8 @@ CREATE TABLE IF NOT EXISTS customer_otps (
   expires_at TIMESTAMPTZ NOT NULL
 );
 CREATE INDEX IF NOT EXISTS customer_otps_phone_idx ON customer_otps(phone, created_at DESC);
+ALTER TABLE orders
+ADD COLUMN IF NOT EXISTS delivery_latitude DOUBLE PRECISION;
+
+ALTER TABLE orders
+ADD COLUMN IF NOT EXISTS delivery_longitude DOUBLE PRECISION;
