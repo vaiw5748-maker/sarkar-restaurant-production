@@ -270,7 +270,7 @@ async function productionPlaceOrder(){
   if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');
   const p=products(),items=cart.map(x=>({productId:p[x.i]?.id,qty:x.q})).filter(x=>x.productId); if(!items.length)return alert('কার্টের খাবারগুলো আর পাওয়া যাচ্ছে না। Menu আবার খুলুন।');
   const verificationToken=localStorage.getItem('sarkarPhoneVerificationToken_'+ph)||'';
-  try{const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:ph,address:ad,items,paymentMethod,verificationToken})});const data=await r.json();if(!r.ok)throw Error(data.error||'Order failed');
+  try{const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:ph,address:ad,items,paymentMethod,verificationToken,location:customerLocation})});const data=await r.json();if(!r.ok)throw Error(data.error||'Order failed');
     localStorage.setItem('sarkarCustomerPhoneV1',ph);orders.unshift(data);set(O,orders);if(data.accessToken)localStorage.setItem('sarkarOrderToken_'+data.id,data.accessToken);
     if(paymentMethod==='ONLINE'){const pr=await fetch('/api/payments/razorpay/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.id,accessToken:data.accessToken})});const pd=await pr.json();if(!pr.ok)throw Error(pd.error||'Online payment unavailable');await startRazorpay(pd,n,ph);data.paymentStatus='PAID';}
     cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert(paymentMethod==='ONLINE'?'অর্ডার ও payment সফল হয়েছে।':'অর্ডার গ্রহণ হয়েছে। Order ID: '+data.id);
