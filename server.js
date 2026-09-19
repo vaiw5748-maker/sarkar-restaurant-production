@@ -87,15 +87,14 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
     if (!token) return res.status(401).json({ error: 'Access token required' });
 
     const o = await q(
-      `SELECT id,status,address,
-              delivery_latitude,
-              delivery_longitude
+      `SELECT id,status,delivery_latitude,delivery_longitude
        FROM orders
        WHERE id=$1 AND access_token_hash=$2`,
       [req.params.id, tokenHash(token)]
     );
 
-    if (!o.rowCount) return res.status(404).json({ error: 'Order not found' });
+    if (!o.rowCount)
+      return res.status(404).json({ error: 'Order not found' });
 
     const order = o.rows[0];
 
@@ -109,7 +108,7 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
     }
 
     const t = await q(
-      `SELECT latitude,longitude,accuracy
+      `SELECT latitude,longitude
        FROM tracking_points
        WHERE order_id=$1
        ORDER BY recorded_at DESC
@@ -127,7 +126,6 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
         const rr = await fetch(
           `https://router.project-osrm.org/route/v1/driving/${location.longitude},${location.latitude};${order.delivery_longitude},${order.delivery_latitude}?overview=false`
         );
-
         const route = await rr.json();
 
         if (route.routes?.length) {
@@ -143,7 +141,6 @@ app.get('/api/orders/:id/tracking', async (req, res) => {
       distanceKm,
       etaMin
     });
-
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
