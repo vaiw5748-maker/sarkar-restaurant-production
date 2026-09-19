@@ -298,8 +298,8 @@ async function getCurrentLocation(){
 
       para.value=a.suburb||a.neighbourhood||a.hamlet||'';
       gram.value=a.village||a.town||a.city||'';
-      post.value=a.postcode||'';
-      thana.value=a.county||a.state_district||'';
+      post.value=a.postcode||a.post_office'';
+      thana.value=a.Police_station||a.state_district||'';
       jela.value=a.state_district||a.county||'';
       pin.value=a.postcode||'';
       ca.value=d.display_name||'';
@@ -353,14 +353,14 @@ async function refreshTracking(id,token,el){
     }
 
   }catch(e){
-    el.innerHTML='🛵 পার্সেল হাতে পাওয়ার জন্যLive Location দেখুন';
+    el.innerHTML='🛵 পার্সেল হাতে পাওয়ার জন্য Live Location দেখুন';
   }
   }
   function renderOrders(){
   const status={
     NEW:'অর্ডার এসেছে',
     ACCEPTED:'অর্ডার গ্রহণ করা হয়েছে',
-    PREPARING:'রান্না হচ্ছে',
+    PREPARING:'packing হচ্ছে',
     READY:'প্রস্তুত',
     OUT_FOR_DELIVERY:'ডেলিভারির পথে',
     CANCELLED:'অর্ডার বাতিল',
