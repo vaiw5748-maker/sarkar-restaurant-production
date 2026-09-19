@@ -48,7 +48,117 @@
 <button class="nav" data-page="orders" onclick="go('orders',this)"><span>▤</span>Orders</button>
 <button class="nav" data-page="profile" onclick="go('profile',this)"><span>♙</span>Profile</button>
 </nav>
-<div id="checkout" class="modal" onclick="if(event.target===this) closeCheckout()"><div class="sheet"><button class="sheet-close" type="button" aria-label="বন্ধ করুন" onclick="closeCheckout()">✕</button><button class="sheet-back" type="button" onclick="closeCheckout()">‹ ফিরে যান</button><h2>অর্ডার নিশ্চিত করুন</h2><label>নাম</label><input id="cn"><label>মোবাইল</label><input id="cp"><label>ডেলিভারি ঠিকানা</label><textarea id="ca" rows="3"></textarea><label>পেমেন্ট</label><select id="pm"><option value="COD">Cash on Delivery</option><option value="ONLINE">Online Payment</option></select><div id="otpBox"><label>ফোন ভেরিফিকেশন OTP</label><div class="row"><input id="otp" inputmode="numeric" maxlength="6" placeholder="6 digit OTP"><button type="button" class="sheet-back" style="border:0" onclick="requestOtp()">OTP পাঠান</button></div><button type="button" class="sheet-back" style="margin-top:6px" onclick="verifyOtp()">OTP Verify</button><small id="otpMsg"></small></div><button class="cta" onclick="placeOrder()">অর্ডার নিশ্চিত করুন</button></div></div>
+<div id="checkout" class="modal" onclick="if(event.target===this) closeCheckout()">
+  <div class="sheet">
+
+    <button class="sheet-close" type="button" aria-label="বন্ধ করুন" onclick="closeCheckout()">✕</button>
+    <button class="sheet-back" type="button" onclick="closeCheckout()">‹ ফিরে যান</button>
+
+    <h2>অর্ডার নিশ্চিত করুন</h2>
+
+    <div class="grid2">
+      <div>
+        <label>নাম</label>
+        <input id="cn" placeholder="আপনার নাম">
+      </div>
+
+      <div>
+        <label>মোবাইল নম্বর</label>
+        <input id="cp" inputmode="numeric" placeholder="10 digit">
+      </div>
+    </div>
+
+    <label>ডেলিভারি ঠিকানা</label>
+
+    <div class="grid2">
+      <div>
+        <label>পাড়া</label>
+        <input id="para" placeholder="পাড়া">
+      </div>
+
+      <div>
+        <label>গ্রাম</label>
+        <input id="gram" placeholder="গ্রাম">
+      </div>
+
+      <div>
+        <label>পোস্ট</label>
+        <input id="post" placeholder="পোস্ট">
+      </div>
+
+      <div>
+        <label>থানা</label>
+        <input id="thana" placeholder="থানা">
+      </div>
+
+      <div>
+        <label>জেলা</label>
+        <input id="jela" placeholder="জেলা">
+      </div>
+
+      <div>
+        <label>পিন নম্বর</label>
+        <input id="pin" inputmode="numeric" placeholder="742302">
+      </div>
+    </div>
+
+    <textarea id="ca" rows="2" placeholder="বিস্তারিত ঠিকানা (ঐচ্ছিক)"></textarea>
+
+    <button type="button"
+            class="cta"
+            style="background:#15803d;margin-top:10px"
+            onclick="getCurrentLocation()">
+      📍 Current Location Select
+    </button>
+
+    <small id="locMsg" style="display:block;margin-top:8px;color:#666">
+      Manual ঠিকানা দিলেও GPS সেভ হবে।
+    </small>
+
+    <label style="margin-top:14px">পেমেন্ট</label>
+    <select id="pm">
+      <option value="COD">Cash on Delivery</option>
+      <option value="ONLINE">Online Payment</option>
+    </select>
+
+    <div id="otpBox" style="margin-top:14px">
+
+      <label>ফোন ভেরিফিকেশন OTP</label>
+
+      <div class="row">
+        <input id="otp"
+               inputmode="numeric"
+               maxlength="6"
+               placeholder="6 digit OTP">
+
+        <button type="button"
+                class="sheet-back"
+                style="border:0"
+                onclick="requestOtp()">
+          OTP পাঠান
+        </button>
+      </div>
+
+      <button type="button"
+              class="sheet-back"
+              style="margin-top:8px"
+              onclick="verifyOtp()">
+        OTP Verify
+      </button>
+
+      <small id="otpMsg"></small>
+
+    </div>
+
+    <button class="cta"
+            style="margin-top:16px"
+            onclick="placeOrder()">
+      অর্ডার নিশ্চিত করুন
+    </button>
+
+  </div>
+</div>
+
 <script>
 const S='sarkarSiteSettingsV8',P='sarkarProductsV8',C='sarkarCartV8',O='sarkarOrdersV8',SIG='sarkarNewOrderSignalV8';
 const DEF={brandBn:'সরকার রেস্টুরেন্ট & বিরিয়ানি',brandEn:'SARKAR RESTAURANT & BIRYANI',address:'গোসাইপুর, হরিরামপুর রোড, মুর্শিদাবাদ, ওয়েস্ট বেঙ্গল, 742302',addressEn:'RESTAURANT ADDRESS',logo:'',open:true,ticker:['আজকের বিশেষ: গরুর মাংসের বিরিয়ানি তাজা রান্না হচ্ছে।'],heroTitle:'গরুর মাংসের বিরিয়ানি',heroSub:'প্রিমিয়াম স্বাদ · আজই অর্ডার করুন',heroButton:'আজই অর্ডার করুন',heroImage:'',heroVideo:'',popularTitle:'গরুর মাংসের বিরিয়ানি',popularSub:'',menuTitle:'মেনু',menuSub:'MENU',cartTitle:'কার্ট',cartSub:'CART',ordersTitle:'অর্ডার',ordersSub:'ORDERS',profileTitle:'প্রোফাইল',profileSub:'PROFILE',profileContent:'আপনার প্রোফাইলের তথ্য এখানে থাকবে।',deliveryFee:40};
