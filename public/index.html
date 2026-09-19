@@ -303,10 +303,7 @@ async function getCurrentLocation(){
   jela.value = a.state || a.state_district || "";
   pin.value = a.postcode || "";
 
-ca.value = `${d.display_name}
-
-📍 GPS: ${lat}, ${lon}
-🗺️ https://www.google.com/maps?q=${lat},${lon}`;
+ca.value = `📍 Current Location\nGPS: ${lat}, ${lon}`;
 
 locMsg.textContent = "✔ Current Location নেওয়া হয়েছে";
 }catch(e){
