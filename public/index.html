@@ -281,46 +281,48 @@ async function productionPlaceOrder(){
 
 async function getCurrentLocation(){
   if(!navigator.geolocation){
-    locMsg.textContent='এই ফোনে GPS নেই';
+    locMsg.textContent="এই ফোনে GPS নেই";
     return;
   }
 
-  locMsg.textContent='লোকেশন নেওয়া হচ্ছে...';
-navigator.geolocation.getCurrentPosition(async(pos)=>{
-  const lat=pos.coords.latitude;
-  const lon=pos.coords.longitude;
+  locMsg.textContent="লোকেশন নেওয়া হচ্ছে...";
 
-  customerLocation={latitude:lat,longitude:lon};
+  navigator.geolocation.getCurrentPosition(async(pos)=>{
+    const lat=pos.coords.latitude;
+    const lon=pos.coords.longitude;
 
-  try{
-    const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${lat}&lon=${lon}`);
-    const d=await r.json();
-    const a=d.address||{};
+    customerLocation={latitude:lat,longitude:lon};
 
-    para.value=a.neighbourhood||a.suburb||a.hamlet||"";
-    gram.value=a.village||a.town||a.city||"";
-    post.value=a.postcode||"";
-    thana.value=a.state_district||a.county||"";
-    jela.value=a.state||a.state_district||"";
-    pin.value=a.postcode||"";
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${lat}&lon=${lon}`);
+      const d=await r.json();
+      const a=d.address||{};
 
-    ca.value = `📍 Current Location
+      para.value=a.neighbourhood||a.suburb||a.hamlet||"";
+      gram.value=a.village||a.town||a.city||"";
+      post.value=a.postcode||"";
+      thana.value=a.state_district||a.county||"";
+      jela.value=a.state||a.state_district||"";
+      pin.value=a.postcode||"";
+
+      ca.value=`📍 Current Location
 GPS: ${lat}, ${lon}`;
 
-    locMsg.textContent="✔ Current Location নেওয়া হয়েছে";
-  }catch(e){
-    ca.value=`📍 Current Location
+      locMsg.textContent="✔ Current Location নেওয়া হয়েছে";
+    }catch(e){
+      ca.value=`📍 Current Location
 GPS: ${lat}, ${lon}`;
-    locMsg.textContent="✔ GPS সেট হয়েছে";
-  }
+      locMsg.textContent="✔ GPS সেট হয়েছে";
+    }
 
-},()=>{
-  locMsg.textContent="লোকেশন অনুমতি দিন";
-},{
-  enableHighAccuracy:true,
-  timeout:20000,
-  maximumAge:0
-});
+  },()=>{
+    locMsg.textContent="লোকেশন অনুমতি দিন";
+  },{
+    enableHighAccuracy:true,
+    timeout:20000,
+    maximumAge:0
+  });
+}
 function placeOrder(){if(location.protocol.startsWith('http')) return productionPlaceOrder(); let n=cn.value.trim(),ph=cp.value.trim(),ad=ca.value.trim();if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');let p=products(),sub=cart.reduce((a,x)=>a+(p[x.i]?.price||0)*x.q,0),fee=settings().deliveryFee||0,o={id:'SK'+Date.now().toString().slice(-8),name:n,phone:ph,address:ad,total:sub+fee,items:cart.map(x=>({name:p[x.i]?.name,qty:x.q,price:p[x.i]?.price})),status:'Placed',createdAt:new Date().toISOString(),completedAt:null};orders.unshift(o);set(O,orders);set(SIG,{id:o.id,time:Date.now()});cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert('অর্ডার গ্রহণ হয়েছে।')}
 async function refreshTracking(id,token,el){
   try{
