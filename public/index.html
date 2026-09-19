@@ -277,6 +277,51 @@ async function productionPlaceOrder(){
   }catch(e){alert(e.message)}
 }
 
+  let customerLocation = null;
+
+async function getCurrentLocation(){
+  const msg = document.getElementById("locMsg");
+
+  if(!navigator.geolocation){
+    msg.textContent = "এই ডিভাইসে GPS নেই।";
+    return;
+  }
+
+  msg.textContent = "লোকেশন নেওয়া হচ্ছে...";
+
+  navigator.geolocation.getCurrentPosition(async(pos)=>{
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+
+    customerLocation = { latitude: lat, longitude: lng };
+
+    try{
+      const r = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+      );
+      const d = await r.json();
+      const a = d.address || {};
+
+      para.value = a.suburb || a.neighbourhood || "";
+      gram.value = a.village || a.hamlet || "";
+      post.value = a.postcode || "";
+      thana.value = a.county || a.state_district || "";
+      jela.value = a.state_district || a.state || "";
+      pin.value = a.postcode || "";
+      ca.value = d.display_name || "";
+
+      msg.textContent = "✓ Current Location নেওয়া হয়েছে।";
+    }catch(e){
+      ca.value = `${lat},${lng}`;
+      msg.textContent = "✓ GPS সেভ হয়েছে।";
+    }
+  },()=>{
+    msg.textContent = "লোকেশন অনুমতি দিন।";
+  },{
+    enableHighAccuracy:true,
+    timeout:10000
+  });
+      }
 function placeOrder(){if(location.protocol.startsWith('http')) return productionPlaceOrder(); let n=cn.value.trim(),ph=cp.value.trim(),ad=ca.value.trim();if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');let p=products(),sub=cart.reduce((a,x)=>a+(p[x.i]?.price||0)*x.q,0),fee=settings().deliveryFee||0,o={id:'SK'+Date.now().toString().slice(-8),name:n,phone:ph,address:ad,total:sub+fee,items:cart.map(x=>({name:p[x.i]?.name,qty:x.q,price:p[x.i]?.price})),status:'Placed',createdAt:new Date().toISOString(),completedAt:null};orders.unshift(o);set(O,orders);set(SIG,{id:o.id,time:Date.now()});cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert('অর্ডার গ্রহণ হয়েছে।')}
 async function refreshTracking(id,token,el){
   try{
