@@ -325,10 +325,10 @@ async function refreshTracking(id,token,el){
        🚚 ${d.distanceKm??'--'} km · ⏱️ ${d.etaMin??'--'} মিনিট<br>
        <a href="https://www.google.com/maps/search/?api=1&query=${d.location.latitude},${d.location.longitude}" target="_blank">🗺️ Live Map</a>`;
     }else{
-      el.innerHTML='📍 ডেলিভারি বয় এখনো লোকেশন পাঠায়নি।';
+      el.innerHTML='🚚 ডেলিভারি পার্টনার আপনার অর্ডার নিয়ে রওনা হয়েছেন।';
     }
   }catch(e){
-    el.innerHTML='📍 Tracking unavailable';
+    el.innerHTML='🚚 অপেক্ষা করুন খুব শীঘ্রই পার্সেল হাতে পাবেন।';
   }
   }
 async function refreshTracking(id,token,el){
@@ -346,14 +346,14 @@ async function refreshTracking(id,token,el){
     if(d.location){
       el.innerHTML=
       `📍 Live Tracking<br>
-       🚚 ${d.distanceKm ?? '--'} km · ⏱️ ${d.etaMin ?? '--'} মিনিট<br>
+       🛵 ${d.distanceKm ?? '--'} km · ⏱️ ${d.etaMin ?? '--'} মিনিট<br>
        <a href="https://www.google.com/maps/search/?api=1&query=${d.location.latitude},${d.location.longitude}" target="_blank">🗺️ Live Map</a>`;
     }else{
-      el.innerHTML='📍 Rider এখনো লোকেশন পাঠায়নি';
+      el.innerHTML='🛵 Rider রওনা হয়েছে। Live Location শীঘ্রই দেখা যাবে।';
     }
 
   }catch(e){
-    el.innerHTML='📍 Tracking unavailable';
+    el.innerHTML='🛵 পার্সেল হাতে পাওয়ার জন্যLive Location দেখুন';
   }
   }
   function renderOrders(){
