@@ -296,13 +296,12 @@ async function getCurrentLocation(){
       const d=await r.json();
       const a=d.address||{};
 
-      para.value=a.suburb||a.neighbourhood||a.hamlet||'';
-      gram.value=a.village||a.town||a.city||'';
-      post.value=a.postcode||a.post_office'';
-      thana.value=a.Police_station||a.state_district||'';
-      jela.value=a.state_district||a.county||'';
-      pin.value=a.postcode||'';
-      ca.value=d.display_name||'';
+      📍 ${esc(x.address||'—')}
+${x.para?`<br>🏘️ পাড়া: ${esc(x.para)}`:''}
+${x.gram?`<br>🌾 গ্রাম: ${esc(x.gram)}`:''}
+${x.post?`<br>📮 পোস্ট: ${esc(x.post)}`:''}
+${x.thana?`<br>🏛️ থানা: ${esc(x.thana)}`:''}
+${x.jela?`<br>🗺️ জেলা: ${esc(x.jela)}`:''}
 
       locMsg.textContent='✔ Current Location নেওয়া হয়েছে।';
     }catch(e){
