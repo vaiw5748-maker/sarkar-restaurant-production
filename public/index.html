@@ -161,6 +161,47 @@
 
 <script>
 const S='sarkarSiteSettingsV8',P='sarkarProductsV8',C='sarkarCartV8',O='sarkarOrdersV8',SIG='sarkarNewOrderSignalV8';
+  let customerGPS = null;
+
+async function getCurrentLocation(){
+  const msg=document.getElementById('locMsg');
+  if(!navigator.geolocation){
+    msg.textContent='GPS support নেই';
+    return;
+  }
+
+  msg.textContent='লোকেশন নেওয়া হচ্ছে...';
+
+  navigator.geolocation.getCurrentPosition(async(pos)=>{
+    customerGPS={
+      latitude:pos.coords.latitude,
+      longitude:pos.coords.longitude
+    };
+
+    msg.textContent='✅ Current Location নেওয়া হয়েছে';
+
+    try{
+      const r=await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${customerGPS.latitude}&lon=${customerGPS.longitude}`
+      );
+      const d=await r.json();
+      const a=d.address||{};
+
+      document.getElementById('para').value=a.suburb||a.neighbourhood||'';
+      document.getElementById('gram').value=a.village||a.hamlet||'';
+      document.getElementById('post').value=a.postcode?'':'';
+      document.getElementById('thana').value=a.county||'';
+      document.getElementById('jela').value=a.state_district||a.state||'';
+      document.getElementById('pin').value=a.postcode||'';
+      document.getElementById('ca').value=d.display_name||'';
+    }catch(e){}
+  },()=>{
+    msg.textContent='❌ লোকেশন পাওয়া যায়নি';
+  },{
+    enableHighAccuracy:true,
+    timeout:10000
+  });
+  }
 const DEF={brandBn:'সরকার রেস্টুরেন্ট & বিরিয়ানি',brandEn:'SARKAR RESTAURANT & BIRYANI',address:'গোসাইপুর, হরিরামপুর রোড, মুর্শিদাবাদ, ওয়েস্ট বেঙ্গল, 742302',addressEn:'RESTAURANT ADDRESS',logo:'',open:true,ticker:['আজকের বিশেষ: গরুর মাংসের বিরিয়ানি তাজা রান্না হচ্ছে।'],heroTitle:'গরুর মাংসের বিরিয়ানি',heroSub:'প্রিমিয়াম স্বাদ · আজই অর্ডার করুন',heroButton:'আজই অর্ডার করুন',heroImage:'',heroVideo:'',popularTitle:'গরুর মাংসের বিরিয়ানি',popularSub:'',menuTitle:'মেনু',menuSub:'MENU',cartTitle:'কার্ট',cartSub:'CART',ordersTitle:'অর্ডার',ordersSub:'ORDERS',profileTitle:'প্রোফাইল',profileSub:'PROFILE',profileContent:'আপনার প্রোফাইলের তথ্য এখানে থাকবে।',deliveryFee:40};
 const DEFP=[{id:'p1',name:'প্রিমিয়াম গরুর মাংসের বিরিয়ানি',en:'PREMIUM BEEF BIRYANI',price:180,desc:'নরম গরুর মাংস, সুগন্ধি চাল ও বিশেষ মসলা।',image:'',video:'',published:true}];
 function get(k,d){try{let x=JSON.parse(localStorage.getItem(k));return x==null?d:x}catch(e){return d}}function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
@@ -228,16 +269,89 @@ async function verifyOtp(){const ph=cp.value.trim(),code=document.getElementById
 async function startRazorpay(data,n,ph){if(!window.Razorpay){await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://checkout.razorpay.com/v1/checkout.js';sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc);});}return new Promise((resolve,reject)=>{const rz=new Razorpay({key:data.keyId,amount:data.amount,currency:data.currency,order_id:data.razorpayOrderId,name:siteNameForPay(),description:'SARKAR Restaurant Order '+data.orderId,prefill:{name:n,contact:ph},handler:async response=>{try{const r=await fetch('/api/payments/razorpay/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,accessToken:localStorage.getItem('sarkarOrderToken_'+data.orderId),...response})});const d=await r.json();if(!r.ok)throw Error(d.error||'Payment verification failed');resolve(d);}catch(e){reject(e)}},modal:{ondismiss:()=>reject(new Error('Payment window closed'))}});rz.open();});}
 function siteNameForPay(){return (settings().brandEn||settings().brandBn||'SARKAR RESTAURANT & BIRYANI').slice(0,80)}
 async function productionPlaceOrder(){
-  const n=cn.value.trim(),ph=cp.value.trim(),ad=ca.value.trim(),paymentMethod=(document.getElementById('pm')?.value||'COD');
-  if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');
-  const p=products(),items=cart.map(x=>({productId:p[x.i]?.id,qty:x.q})).filter(x=>x.productId); if(!items.length)return alert('কার্টের খাবারগুলো আর পাওয়া যাচ্ছে না। Menu আবার খুলুন।');
-  const verificationToken=localStorage.getItem('sarkarPhoneVerificationToken_'+ph)||'';
-  try{const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:ph,address:ad,items,paymentMethod,verificationToken})});const data=await r.json();if(!r.ok)throw Error(data.error||'Order failed');
-    localStorage.setItem('sarkarCustomerPhoneV1',ph);orders.unshift(data);set(O,orders);if(data.accessToken)localStorage.setItem('sarkarOrderToken_'+data.id,data.accessToken);
-    if(paymentMethod==='ONLINE'){const pr=await fetch('/api/payments/razorpay/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.id,accessToken:data.accessToken})});const pd=await pr.json();if(!pr.ok)throw Error(pd.error||'Online payment unavailable');await startRazorpay(pd,n,ph);data.paymentStatus='PAID';}
-    cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert(paymentMethod==='ONLINE'?'অর্ডার ও payment সফল হয়েছে।':'অর্ডার গ্রহণ হয়েছে। Order ID: '+data.id);
-  }catch(e){alert(e.message)}
-}
+
+  const name=cn.value.trim();
+  const phone=cp.value.trim();
+
+  const address=[
+    "পাড়া: "+document.getElementById("para").value.trim(),
+    "গ্রাম: "+document.getElementById("gram").value.trim(),
+    "পোস্ট: "+document.getElementById("post").value.trim(),
+    "থানা: "+document.getElementById("thana").value.trim(),
+    "জেলা: "+document.getElementById("jela").value.trim(),
+    "পিন: "+document.getElementById("pin").value.trim(),
+    document.getElementById("ca").value.trim()
+  ].join("\n");
+
+  const paymentMethod=document.getElementById("pm").value||"COD";
+
+  if(!name||!phone) return alert("নাম ও মোবাইল দিন");
+
+  if(!customerGPS){
+    await new Promise(resolve=>{
+      navigator.geolocation.getCurrentPosition(pos=>{
+        customerGPS={
+          latitude:pos.coords.latitude,
+          longitude:pos.coords.longitude
+        };
+        resolve();
+      },()=>resolve(),{
+        enableHighAccuracy:true,
+        timeout:8000
+      });
+    });
+  }
+
+  const items=cart.map(x=>({
+    productId:x.i,
+    qty:x.q
+  })).filter(x=>products()[x.productId]);
+
+  if(!items.length) return alert("কার্ট খালি");
+
+  try{
+
+    const r=await fetch("/api/orders",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        name,
+        phone,
+        address,
+        paymentMethod,
+        items,
+        location:customerGPS
+      })
+    });
+
+    const data=await r.json();
+
+    if(!r.ok) return alert(data.error||"Order failed");
+
+    localStorage.setItem("sarkarCustomerPhoneV1",phone);
+    orders.unshift(data);
+    set(O,orders);
+
+    if(data.accessToken){
+      localStorage.setItem("sarkarOrderToken_"+data.id,data.accessToken);
+    }
+
+    cart=[];
+    set(C,cart);
+    checkout.classList.remove("show");
+    renderCart();
+    renderOrders();
+
+    alert(paymentMethod==="ONLINE"
+      ?"অর্ডার তৈরি হয়েছে। Payment চালু হবে।"
+      :"অর্ডার সফলভাবে হয়েছে।");
+
+  }catch(e){
+    alert(e.message);
+  }
+  }
 
 function placeOrder(){if(location.protocol.startsWith('http')) return productionPlaceOrder(); let n=cn.value.trim(),ph=cp.value.trim(),ad=ca.value.trim();if(!n||!ph||!ad)return alert('সব তথ্য পূরণ করুন');let p=products(),sub=cart.reduce((a,x)=>a+(p[x.i]?.price||0)*x.q,0),fee=settings().deliveryFee||0,o={id:'SK'+Date.now().toString().slice(-8),name:n,phone:ph,address:ad,total:sub+fee,items:cart.map(x=>({name:p[x.i]?.name,qty:x.q,price:p[x.i]?.price})),status:'Placed',createdAt:new Date().toISOString(),completedAt:null};orders.unshift(o);set(O,orders);set(SIG,{id:o.id,time:Date.now()});cart=[];set(C,[]);checkout.classList.remove('show');render();go('orders');alert('অর্ডার গ্রহণ হয়েছে।')}
 async function refreshTracking(id,token,el){
