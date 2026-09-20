@@ -241,6 +241,21 @@ function renderCart(){
 
   cartSummary.innerHTML=`<div class="summary"><div class="line"><span>খাবারের দাম</span><b>₹${sub}</b></div><div class="line"><span>ডেলিভারি চার্জ</span><b>₹${fee}</b></div><div class="line total"><b>মোট টাকা</b><b class="price">₹${total}</b></div></div><div class="box" style="margin-top:10px"><div style="font-weight:900;margin-bottom:6px">📍 Current Location</div><div style="font-size:13px;color:#666">Checkout-এ Current Location নির্বাচন করুন।</div></div><button class="cta" onclick="openCheckout()">অর্ডার নিশ্চিত করুন</button>`;
   }
+  let discount = 0;
+
+function applyCoupon(){
+  const c = document.getElementById('coupon').value.trim().toUpperCase();
+  discount = 0;
+
+  if(c==='WELCOME20') discount = 20;
+  else if(c==='FREEDEL') discount = settings().deliveryFee || 40;
+  else if(c==='BEEF10') discount = Math.round((products()[0].price||140)*0.10);
+
+  document.getElementById('couponMsg').textContent =
+    discount>0 ? `✅ ₹${discount} ছাড় প্রয়োগ হয়েছে।` : '❌ কুপন সঠিক নয়।';
+
+  renderCart();
+}
 function openCheckout(){checkout.classList.add('show');setTimeout(()=>cn.focus(),80)}
 function closeCheckout(){checkout.classList.remove('show')}
 async function productionLoad(){
