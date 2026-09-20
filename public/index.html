@@ -153,6 +153,35 @@
       Manual ঠিকানা দিলেও GPS সেভ হবে।
     </small>
 
+    <div class="box" style="margin-top:10px">
+  <row justify=between align=center>
+    <box gap=0>
+      <title size=sm>📍 ডেলিভারি ঠিকানা</title>
+      <caption id="checkoutAddress">Current Location নির্বাচন করুন</caption>
+    </box>
+    <button variant=outline size=sm onClick="getCurrentLocation()">Edit</button>
+  </row>
+</div>
+
+<div class="box" style="margin-top:10px">
+  <row gap=2 align=center>
+    <box flex=1>
+      <input id="coupon" placeholder="WELCOME20">
+    </box>
+    <button onClick="applyCoupon()">Apply</button>
+  </row>
+  <caption id="couponMsg"></caption>
+</div>
+
+<div id="checkoutProduct" class="box" style="margin-top:10px"></div>
+
+<div class="box" style="margin-top:10px">
+  <row justify=between><text size=sm>খাবারের দাম</text><text size=sm strong id="subPrice">₹0</text></row>
+  <row justify=between><text size=sm>ডেলিভারি চার্জ</text><text size=sm strong id="deliveryFee">₹40</text></row>
+  <row justify=between><text size=sm>ছাড়</text><text size=sm strong id="discountPrice">-₹0</text></row>
+  <divider spacing=1/>
+  <row justify=between align=center><title size=md>মোট টাকা</title><title size=md color="#b8860b" id="totalPrice">₹0</title></row>
+</div>
     <label style="margin-top:14px">পেমেন্ট</label>
     <select id="pm">
       <option value="COD">Cash on Delivery</option>
@@ -234,15 +263,45 @@ function renderCart(){
       fee=Number(settings().deliveryFee||0),
       total=sub+fee;
 
-  cartList.innerHTML=cart.map(x=>{
-    let a=p[x.i];
-    return a?`<div class="box row"><div class="grow"><b>${esc(a.name)}</b><div class="price" style="font-size:16px">₹${a.price*x.q}</div></div><div class="qty"><button onclick="change(${x.i},-1)">−</button>${x.q}<button onclick="change(${x.i},1)">+</button></div></div>`:'';
-  }).join('');
+  cartList.innerHTML = cart.map(x=>{
+  let a=p[x.i];
+  return `
+    <div class="box row">
+      <div class="grow">
+        <b>${esc(a.name)}</b>
+        <div class="price">₹${a.price*x.q}</div>
+      </div>
+      <button onclick="change(${x.i},-1)">−</button>
+      <b style="padding:0 10px">${x.q}</b>
+      <button onclick="change(${x.i},1)">+</button>
+    </div>`;
+}).join('');
 
-  cartSummary.innerHTML=`<div class="summary"><div class="line"><span>খাবারের দাম</span><b>₹${sub}</b></div><div class="line"><span>ডেলিভারি চার্জ</span><b>₹${fee}</b></div><div class="line total"><b>মোট টাকা</b><b class="price">₹${total}</b></div></div><div class="box" style="margin-top:10px"><div style="font-weight:900;margin-bottom:6px">📍 Current Location</div><div style="font-size:13px;color:#666">Checkout-এ Current Location নির্বাচন করুন।</div></div><button class="cta" onclick="openCheckout()">অর্ডার নিশ্চিত করুন</button>`;
-  }
+document.getElementById('checkoutProduct').innerHTML = cart.map(x=>{
+  let a=p[x.i];
+  return `
+    <div class="box row" style="margin-bottom:10px">
+      <img src="${esc(a.image)}" style="width:70px;height:70px;border-radius:12px;object-fit:cover">
+      <div class="grow" style="margin-left:10px">
+        <b>${esc(a.name)}</b>
+        <div>₹${a.price}</div>
+      </div>
+      <button onclick="change(${x.i},-1)">−</button>
+      <b style="padding:0 10px">${x.q}</b>
+      <button onclick="change(${x.i},1)">+</button>
+    </div>`;
+}).join('');
+
+document.getElementById('subPrice').textContent='₹'+sub;
+document.getElementById('deliveryFee').textContent='₹'+fee;
+document.getElementById('discountPrice').textContent='-₹'+discount;
+document.getElementById('totalPrice').textContent='₹'+(total-discount);
+document.getElementById('checkoutAddress').textContent =
+  customerLocation
+    ? "📍 Current Location নেওয়া হয়েছে"
+    : "📍 Current Location নির্বাচন করুন";
   let discount = 0;
-
+  }
 function applyCoupon(){
   const c = document.getElementById('coupon').value.trim().toUpperCase();
   discount = 0;
@@ -256,7 +315,14 @@ function applyCoupon(){
 
   renderCart();
 }
-function openCheckout(){checkout.classList.add('show');setTimeout(()=>cn.focus(),80)}
+function openCheckout(){
+  renderCart();
+  checkout.classList.add('show');
+  setTimeout(()=>cn.focus(),80);
+
+  if(!cart.length) return;
+  }
+
 function closeCheckout(){checkout.classList.remove('show')}
 async function productionLoad(){
   if(!location.protocol.startsWith('http')) return;
