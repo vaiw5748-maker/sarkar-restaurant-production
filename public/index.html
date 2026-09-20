@@ -140,18 +140,42 @@
       </div>
     </div>
 
-    <textarea id="ca" rows="2" placeholder="বিস্তারিত ঠিকানা (ঐচ্ছিক)"></textarea>
+    <div class="box" style="margin:12px 0">
+  <row justify=between align=center>
+    <box gap=0>
+      <row gap=2 align=center>
+        <icon name=map-pin color=danger/>
+        **ডেলিভারি ঠিকানা**
+      </row>
+      <caption id="checkoutAddress">Current Location নির্বাচন করুন</caption>
+    </box>
+    <button variant=outline size=sm onClick={getCurrentLocation}>Edit</button>
+  </row>
+</div>
 
-    <button type="button"
-            class="cta"
-            style="background:#15803d;margin-top:10px"
-            onclick="getCurrentLocation()">
-      📍 Current Location Select
-    </button>
+<div class="box" style="margin:12px 0" gap=3>
+  <row justify=between align=center>
+    <row gap=2 align=center><icon name=ticket color=warning/>**অফার / কুপন**</row>
+    <badge label="WELCOME20"/>
+  </row>
 
-    <small id="locMsg" style="display:block;margin-top:8px;color:#666">
-      Manual ঠিকানা দিলেও GPS সেভ হবে।
-    </small>
+  <row gap=2 align=center>
+    <box flex=1><input id="coupon" placeholder="কুপন কোড লিখুন"/></box>
+    <button onClick={applyCoupon}>Apply</button>
+  </row>
+
+  <caption id="couponMsg"/>
+</div>
+
+<div class="box" id="checkoutProduct" style="margin:12px 0"></div>
+
+<div class="box" style="margin:12px 0" gap=2>
+  <row justify=between><text size=sm>খাবারের দাম</text><text size=sm strong id="subPrice">₹0</text></row>
+  <row justify=between><text size=sm>ডেলিভারি চার্জ</text><text size=sm strong id="deliveryFee">₹0</text></row>
+  <row justify=between><text size=sm>ছাড়</text><text size=sm strong id="discountPrice">-₹0</text></row>
+  <divider spacing={1}/>
+  <row justify=between align=center><title size=md>মোট টাকা</title><title size=md color=warning id="totalPrice">₹0</title></row>
+</div>
 
     <div class="box" style="margin-top:10px">
   <row justify=between align=center>
